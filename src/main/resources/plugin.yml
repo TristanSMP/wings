@@ -4,7 +4,7 @@ main: com.tristansmp.wings.Wings
 api-version: 1.19
 
 commands:
-  elink:
+  link:
     description: TSMP link command
     usage: /link <code>
     permission: wings.link
