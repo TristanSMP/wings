@@ -1,6 +1,6 @@
-package com.tristansmp.elytra.commands
+package com.tristansmp.wings.commands
 
-import com.tristansmp.elytra.Elytra
+import com.tristansmp.wings.Elytra
 import khttp.post
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

@@ -1,6 +1,6 @@
-package com.tristansmp.elytra.events
+package com.tristansmp.wings.events
 
-import com.tristansmp.elytra.Elytra
+import com.tristansmp.wings.Elytra
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.event.EventHandler

@@ -1,4 +1,4 @@
-package com.tristansmp.elytra.plugins
+package com.tristansmp.wings.plugins
 
 import io.ktor.serialization.gson.*
 import io.ktor.server.application.*

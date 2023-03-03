@@ -1,4 +1,4 @@
-package com.tristansmp.elytra.lib
+package com.tristansmp.wings.lib
 
 import java.util.*
 

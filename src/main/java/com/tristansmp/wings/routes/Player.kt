@@ -1,8 +1,8 @@
-package com.tristansmp.elytra.routes
+package com.tristansmp.wings.routes
 
-import com.tristansmp.elytra.Elytra
-import com.tristansmp.elytra.lib.SerializeUtils
-import com.tristansmp.elytra.lib.getName
+import com.tristansmp.wings.Elytra
+import com.tristansmp.wings.lib.SerializeUtils
+import com.tristansmp.wings.lib.getName
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.application.ApplicationCallPipeline.ApplicationPhase.Plugins

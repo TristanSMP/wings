@@ -1,4 +1,4 @@
-package com.tristansmp.elytra.routes
+package com.tristansmp.wings.routes
 
 import io.ktor.server.application.*
 import io.ktor.server.response.*

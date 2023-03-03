@@ -6,11 +6,7 @@
 	<br />
 </div>
 
-# Elytra
+# Wings
 
-Elytra is a PaperMC plugin that implements an API server that turns your Minecraft server into a microservice.
+Wings is a fork of [elytra](https://github.com/EvieLabs/elytra) specifically for the [Tristan SMP](https://tristansmp.com) server.
 
-## Features
-
-- Official client libraries for Node.js and more to come.
-- Player manipulation.

@@ -1,10 +1,10 @@
-package com.tristansmp.elytra.lib
+package com.tristansmp.wings.lib
 
 import com.akuleshov7.ktoml.Toml
 import com.akuleshov7.ktoml.TomlIndentation
 import com.akuleshov7.ktoml.TomlInputConfig
 import com.akuleshov7.ktoml.TomlOutputConfig
-import com.tristansmp.elytra.Elytra
+import com.tristansmp.wings.Elytra
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString

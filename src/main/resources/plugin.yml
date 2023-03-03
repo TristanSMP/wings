@@ -1,10 +1,10 @@
-name: elytra
+name: wings
 version: '${version}'
-main: com.tristansmp.elytra.Elytra
+main: com.tristansmp.wings.Wings
 api-version: 1.19
 
 commands:
   elink:
-    description: Elytra link command
-    usage: /elink <code>
-    permission: elytra.link
+    description: TSMP link command
+    usage: /link <code>
+    permission: wings.link

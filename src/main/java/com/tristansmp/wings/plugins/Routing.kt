@@ -1,9 +1,9 @@
-package com.tristansmp.elytra.plugins
+package com.tristansmp.wings.plugins
 
-import com.tristansmp.elytra.Elytra
-import com.tristansmp.elytra.routes.Health
-import com.tristansmp.elytra.routes.LuckPerms
-import com.tristansmp.elytra.routes.Player
+import com.tristansmp.wings.Elytra
+import com.tristansmp.wings.routes.Health
+import com.tristansmp.wings.routes.LuckPerms
+import com.tristansmp.wings.routes.Player
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.application.ApplicationCallPipeline.ApplicationPhase.Plugins

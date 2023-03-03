@@ -1,12 +1,12 @@
-package com.tristansmp.elytra
+package com.tristansmp.wings
 
-import com.tristansmp.elytra.commands.CommandLink
-import com.tristansmp.elytra.events.ChatListener
-import com.tristansmp.elytra.lib.ConfigManager
-import com.tristansmp.elytra.lib.MemoryStore
-import com.tristansmp.elytra.plugins.configureHTTP
-import com.tristansmp.elytra.plugins.configureRouting
-import com.tristansmp.elytra.plugins.configureSerialization
+import com.tristansmp.wings.commands.CommandLink
+import com.tristansmp.wings.events.ChatListener
+import com.tristansmp.wings.lib.ConfigManager
+import com.tristansmp.wings.lib.MemoryStore
+import com.tristansmp.wings.plugins.configureHTTP
+import com.tristansmp.wings.plugins.configureRouting
+import com.tristansmp.wings.plugins.configureSerialization
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -45,7 +45,7 @@ class Elytra : JavaPlugin() {
         }
 
         server.pluginManager.registerEvents(ChatListener(), this)
-        this.getCommand("elink")?.setExecutor(CommandLink())
+        this.getCommand("link")?.setExecutor(CommandLink())
     }
 
     override fun onDisable() {

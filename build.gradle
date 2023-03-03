@@ -7,7 +7,7 @@ plugins {
 
 group = 'com.tristansmp'
 version = '1.0-SNAPSHOT'
-mainClassName = "com.tristansmp.elytra.Elytra"
+mainClassName = "com.tristansmp.wings.Wings"
 
 
 repositories {
