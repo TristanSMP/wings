@@ -1,6 +1,6 @@
 package com.tristansmp.wings.routes
 
-import com.tristansmp.wings.Elytra
+import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.SerializeUtils
 import com.tristansmp.wings.lib.getName
 import io.ktor.http.*
@@ -103,7 +103,7 @@ fun Route.Player() {
 
             val world = req.world?.let { Bukkit.getWorld(it) } ?: player!!.world
 
-            Bukkit.getScheduler().callSyncMethod(Bukkit.getPluginManager().getPlugin("elytra")!!) {
+            Bukkit.getScheduler().callSyncMethod(Bukkit.getPluginManager().getPlugin("wings")!!) {
                 player!!.teleport(
                     org.bukkit.Location(
                         world,
@@ -128,25 +128,25 @@ fun Route.Player() {
         }
 
         post("/{target}/chat/collector") {
-            val existing = Elytra.instance.mstore.get<Boolean>("cc:${player!!.uniqueId}:needs_collection")
+            val existing = Wings.instance.mstore.get<Boolean>("cc:${player!!.uniqueId}:needs_collection")
 
             if (existing != null && existing) {
                 call.respond(mapOf("status" to "collector-exists"))
                 return@post
             }
 
-            Elytra.instance.mstore.set("cc:${player!!.uniqueId}:needs_collection", true)
+            Wings.instance.mstore.set("cc:${player!!.uniqueId}:needs_collection", true)
 
             call.respond(mapOf("status" to "collector-created"))
         }
 
         get("/{target}/chat/collector") {
-            val status = Elytra.instance.mstore.get<Boolean>("cc:${player!!.uniqueId}:needs_collection")
-            val result = Elytra.instance.mstore.get<String>("cc:${player!!.uniqueId}:results")
+            val status = Wings.instance.mstore.get<Boolean>("cc:${player!!.uniqueId}:needs_collection")
+            val result = Wings.instance.mstore.get<String>("cc:${player!!.uniqueId}:results")
 
             when {
                 result != null -> {
-                    Elytra.instance.mstore.remove("cc:${player!!.uniqueId}:results")
+                    Wings.instance.mstore.remove("cc:${player!!.uniqueId}:results")
                     call.respond(mapOf("status" to "collected", "result" to result))
                 }
 

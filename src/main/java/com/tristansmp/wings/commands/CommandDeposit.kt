@@ -1,6 +1,6 @@
 package com.tristansmp.wings.commands
 
-import com.tristansmp.wings.Elytra
+import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.ChatRes
 import khttp.post
 import org.bukkit.Material
@@ -19,8 +19,8 @@ class CommandDeposit : CommandExecutor {
 
         val player = sender
         val uuid = player.uniqueId.toString()
-        val token = Elytra.instance.config.config.token ?: return false
-        val endpoint = Elytra.instance.config.config.wingsApiEndpoint ?: return false
+        val token = Wings.instance.config.config.token ?: return false
+        val endpoint = Wings.instance.config.config.wingsApiEndpoint ?: return false
 
         if (!sender.hasPermission("tsmpmarkets.deposit")) {
             sender.sendMessage(ChatRes.error("You don't have permission to use this command!"))
@@ -63,7 +63,7 @@ class CommandDeposit : CommandExecutor {
                 true
             } else {
                 val nonce = (0..100000).random()
-                Elytra.instance.logger.warning("Failed to deposit ${item.amount} diamonds for ${player.name} (${player.uniqueId})! (Nonce: $nonce)")
+                Wings.instance.logger.warning("Failed to deposit ${item.amount} diamonds for ${player.name} (${player.uniqueId})! (Nonce: $nonce)")
                 player.sendMessage(ChatRes.error("Failed to deposit! Screenshot this error, create a ticket and send it! (Nonce: $nonce)"))
                 true
             }

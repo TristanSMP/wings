@@ -1,6 +1,6 @@
 package com.tristansmp.wings.events
 
-import com.tristansmp.wings.Elytra
+import com.tristansmp.wings.Wings
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.event.EventHandler
@@ -20,7 +20,7 @@ class ChatListener : Listener {
 
             val content = message.content().substring(1)
 
-            val needsCollection = Elytra.instance.mstore.get<Boolean>("cc:${event.player.uniqueId}:needs_collection")
+            val needsCollection = Wings.instance.mstore.get<Boolean>("cc:${event.player.uniqueId}:needs_collection")
 
             if (needsCollection == null || !needsCollection) {
                 return
@@ -28,13 +28,13 @@ class ChatListener : Listener {
 
             event.isCancelled = true
 
-            Elytra.instance.mstore.set("cc:${event.player.uniqueId}:results", content)
+            Wings.instance.mstore.set("cc:${event.player.uniqueId}:results", content)
 
-            event.player.sendMessage("§d[Elytra] §aMessage collected.")
+            event.player.sendMessage("§d[Wings] §aMessage collected.")
 
-            Elytra.instance.mstore.remove("cc:${event.player.uniqueId}:needs_collection")
+            Wings.instance.mstore.remove("cc:${event.player.uniqueId}:needs_collection")
         } catch (e: ClassCastException) {
-            event.player.sendMessage("§d[Elytra] §cMessage could not be collected.")
+            event.player.sendMessage("§d[Wings] §cMessage could not be collected.")
         }
     }
 }

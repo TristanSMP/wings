@@ -1,6 +1,6 @@
 package com.tristansmp.wings.routes
 
-import com.tristansmp.wings.Elytra
+import com.tristansmp.wings.Wings
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -18,7 +18,7 @@ fun Route.LuckPerms() {
     route("/luckperms") {
 
         delete("/users/{target}/permissions/{permission}") {
-            val lp = Elytra.instance.lp
+            val lp = Wings.instance.lp
 
             if (lp == null) {
                 call.response.status(HttpStatusCode.FailedDependency)
@@ -47,7 +47,7 @@ fun Route.LuckPerms() {
 
         post("/users/{target}/permissions") {
             val req = call.receive<LuckPermsPermissionsPOST>()
-            val lp = Elytra.instance.lp
+            val lp = Wings.instance.lp
 
             if (lp == null) {
                 call.response.status(HttpStatusCode.FailedDependency)

@@ -1,6 +1,6 @@
 package com.tristansmp.wings.commands
 
-import com.tristansmp.wings.Elytra
+import com.tristansmp.wings.Wings
 import khttp.post
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 
 class CommandLink : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
-        if (sender !is Player || Elytra.instance.config.config.token == null || Elytra.instance.config.config.wingsApiEndpoint == null) {
+        if (sender !is Player || Wings.instance.config.config.token == null || Wings.instance.config.config.wingsApiEndpoint == null) {
             return false
         }
 
@@ -21,10 +21,10 @@ class CommandLink : CommandExecutor {
         val player = sender
         val uuid = player.uniqueId.toString()
         val code = args[0]
-        val token = Elytra.instance.config.config.token ?: return false
-        val endpoint = Elytra.instance.config.config.wingsApiEndpoint ?: return false
+        val token = Wings.instance.config.config.token ?: return false
+        val endpoint = Wings.instance.config.config.wingsApiEndpoint ?: return false
 
-        player.sendMessage("§a§l[§b§lElytra§a§l] §a§lLinking account...")
+        player.sendMessage("§d[Wings] §aLinking account...")
 
         try {
             val response = post(
@@ -40,12 +40,12 @@ class CommandLink : CommandExecutor {
 
             // check the response code
             if (response.statusCode == 200) {
-                player.sendMessage("§a§l[§b§lElytra§a§l] §a§lSuccessfully linked account!")
+                player.sendMessage("§d[Wings] §aSuccessfully linked account!")
             } else {
-                player.sendMessage("§a§l[§b§lElytra§a§l] §c§lFailed to link account!")
+                player.sendMessage("§d[Wings] §cFailed to link account!")
             }
         } catch (e: Exception) {
-            player.sendMessage("§a§l[§b§lElytra§a§l] §c§lFailed to link account!")
+            player.sendMessage("§d[Wings] §cFailed to link account!")
         }
 
         return true

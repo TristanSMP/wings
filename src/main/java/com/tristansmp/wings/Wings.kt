@@ -16,10 +16,10 @@ import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 
-class Elytra : JavaPlugin() {
+class Wings : JavaPlugin() {
 
     companion object {
-        lateinit var instance: Elytra
+        lateinit var instance: Wings
     }
 
     lateinit var config: ConfigManager

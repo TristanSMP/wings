@@ -4,7 +4,7 @@ import com.akuleshov7.ktoml.Toml
 import com.akuleshov7.ktoml.TomlIndentation
 import com.akuleshov7.ktoml.TomlInputConfig
 import com.akuleshov7.ktoml.TomlOutputConfig
-import com.tristansmp.wings.Elytra
+import com.tristansmp.wings.Wings
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -25,11 +25,11 @@ class ConfigManager {
     )
 
     init {
-        if (!Elytra.instance.dataFolder.exists()) {
-            Elytra.instance.dataFolder.mkdirs()
+        if (!Wings.instance.dataFolder.exists()) {
+            Wings.instance.dataFolder.mkdirs()
         }
 
-        val file = File(Elytra.instance.dataFolder, "config.toml")
+        val file = File(Wings.instance.dataFolder, "config.toml")
 
         if (!file.exists()) {
             try {
@@ -53,7 +53,7 @@ class ConfigManager {
             file.readText()
         )
 
-        Elytra.instance.logger.info("Loaded config")
-        Elytra.instance.logger.info("Authentication is ${if (config.token == null) "disabled" else "enabled"}")
+        Wings.instance.logger.info("Loaded config")
+        Wings.instance.logger.info("Authentication is ${if (config.token == null) "disabled" else "enabled"}")
     }
 }

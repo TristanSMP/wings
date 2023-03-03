@@ -1,6 +1,6 @@
 package com.tristansmp.wings.plugins
 
-import com.tristansmp.wings.Elytra
+import com.tristansmp.wings.Wings
 import com.tristansmp.wings.routes.Health
 import com.tristansmp.wings.routes.LuckPerms
 import com.tristansmp.wings.routes.Player
@@ -20,7 +20,7 @@ fun Application.configureRouting() {
 
     routing {
         intercept(Plugins) {
-            if (Elytra.instance.config.config.token != null && Elytra.instance.config.config.token != call.request.headers["Authorization"]) {
+            if (Wings.instance.config.config.token != null && Wings.instance.config.config.token != call.request.headers["Authorization"]) {
                 call.respond(HttpStatusCode.Unauthorized)
                 return@intercept finish()
             }
@@ -29,7 +29,7 @@ fun Application.configureRouting() {
         }
 
         get("/") {
-            call.respondRedirect("https://github.com/tristansmp/elytra")
+            call.respondRedirect("https://github.com/tristansmp/wings")
         }
 
         Health()
