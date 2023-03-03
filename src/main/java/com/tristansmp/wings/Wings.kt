@@ -1,5 +1,6 @@
 package com.tristansmp.wings
 
+import com.tristansmp.wings.commands.CommandDeposit
 import com.tristansmp.wings.commands.CommandLink
 import com.tristansmp.wings.events.ChatListener
 import com.tristansmp.wings.lib.ConfigManager
@@ -45,7 +46,9 @@ class Elytra : JavaPlugin() {
         }
 
         server.pluginManager.registerEvents(ChatListener(), this)
+
         this.getCommand("link")?.setExecutor(CommandLink())
+        this.getCommand("deposit")?.setExecutor(CommandDeposit())
     }
 
     override fun onDisable() {

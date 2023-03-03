@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 
 class CommandLink : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
-        if (sender !is Player || Elytra.instance.config.config.token == null || Elytra.instance.config.config.linkAccountEndpoint == null) {
+        if (sender !is Player || Elytra.instance.config.config.token == null || Elytra.instance.config.config.wingsApiEndpoint == null) {
             return false
         }
 
@@ -22,13 +22,13 @@ class CommandLink : CommandExecutor {
         val uuid = player.uniqueId.toString()
         val code = args[0]
         val token = Elytra.instance.config.config.token ?: return false
-        val endpoint = Elytra.instance.config.config.linkAccountEndpoint ?: return false
+        val endpoint = Elytra.instance.config.config.wingsApiEndpoint ?: return false
 
         player.sendMessage("§a§l[§b§lElytra§a§l] §a§lLinking account...")
 
         try {
             val response = post(
-                url = endpoint,
+                url = "$endpoint/linkAccount",
                 data = mapOf(
                     "uuid" to uuid,
                     "code" to code

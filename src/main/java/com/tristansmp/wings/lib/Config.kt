@@ -14,7 +14,7 @@ import java.io.IOException
 @Serializable
 data class Config(
     val token: String? = null,
-    val linkAccountEndpoint: String? = null,
+    val wingsApiEndpoint: String? = null,
 )
 
 class ConfigManager {

@@ -8,3 +8,7 @@ commands:
     description: TSMP link command
     usage: /link <code>
     permission: wings.link
+  deposit:
+    description: Deposit diamonds to the TSMP market
+    usage: /deposit <amount>
+    permission: wings.deposit
