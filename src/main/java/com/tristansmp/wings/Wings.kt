@@ -14,7 +14,10 @@ import io.ktor.server.netty.*
 import net.luckperms.api.LuckPerms
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
-
+import io.ktor.client.*
+import io.ktor.client.engine.java.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
 
 class Wings : JavaPlugin() {
 
@@ -25,6 +28,11 @@ class Wings : JavaPlugin() {
     lateinit var config: ConfigManager
     lateinit var mstore: MemoryStore
     var lp: LuckPerms? = null
+    val http = HttpClient(Java) {
+        install(ContentNegotiation) {
+            json()
+        }
+    }
 
     override fun onEnable() {
         Thread {

@@ -2,7 +2,11 @@ package com.tristansmp.wings.commands
 
 import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.ChatRes
-import khttp.post
+import io.ktor.client.request.*
+import io.ktor.http.*
+import io.ktor.util.*
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -10,7 +14,11 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
+@Serializable
+data class DepositPayload(val uuid: String, val amount: Int)
+
 class CommandDeposit : CommandExecutor {
+    @OptIn(InternalAPI::class)
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) {
             sender.sendMessage("You must be a player to use this command!")
@@ -46,30 +54,31 @@ class CommandDeposit : CommandExecutor {
 
         player.inventory.setItemInMainHand(null)
 
-        try {
-            val response = post(
-                url = "$endpoint/marketDeposit",
-                data = mapOf(
-                    "uuid" to uuid,
-                    "amount" to item.amount
-                ),
-                headers = mapOf(
-                    "Authorization" to token
-                )
-            )
 
-            return if (response.statusCode == 200) {
-                player.sendMessage(ChatRes.success("Successfully deposited ${item.amount} diamonds!"))
-                true
-            } else {
-                val nonce = (0..100000).random()
-                Wings.instance.logger.warning("Failed to deposit ${item.amount} diamonds for ${player.name} (${player.uniqueId})! (Nonce: $nonce)")
-                player.sendMessage(ChatRes.error("Failed to deposit! Screenshot this error, create a ticket and send it! (Nonce: $nonce)"))
-                true
+        runBlocking {
+            try {
+
+                Wings.instance.logger.info("$endpoint/marketDeposit")
+
+                val response = Wings.instance.http.post("$endpoint/marketDeposit") {
+                    header("Authorization", token)
+                    contentType(ContentType.Application.Json)
+                    setBody(DepositPayload(uuid, item.amount))
+                }
+
+                if (response.status.value == 200) {
+                    player.sendMessage(ChatRes.success("Successfully deposited ${item.amount} diamonds!"))
+                } else {
+                    val nonce = (0..100000).random()
+                    Wings.instance.logger.warning("Failed to deposit ${item.amount} diamonds for ${player.name} (${player.uniqueId})! (Nonce: $nonce)")
+                    player.sendMessage(ChatRes.error("Failed to deposit! Screenshot this error, create a ticket and send it! (Nonce: $nonce)"))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                player.sendMessage(ChatRes.error("Failed to deposit!"))
             }
-        } catch (e: Exception) {
-            player.sendMessage(ChatRes.error("Failed to deposit!"))
-            return true
         }
+
+        return true
     }
 }
