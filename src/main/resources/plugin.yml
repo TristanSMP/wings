@@ -12,7 +12,7 @@ commands:
     description: Deposit diamonds to the TSMP market
     usage: /deposit <amount>
     permission: wings.deposit
-  delivery:
+  deliver:
     description: Get items delivered to you from the TSMP market
     usage: /deliver
     permission: wings.deliver
