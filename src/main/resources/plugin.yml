@@ -16,3 +16,7 @@ commands:
     description: Get items delivered to you from the TSMP market
     usage: /deliver
     permission: wings.deliver
+  package:
+    description: Package an item to sell on the TSMP market
+    usage: /package <price>
+    permission: wings.package

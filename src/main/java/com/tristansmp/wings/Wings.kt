@@ -3,6 +3,7 @@ package com.tristansmp.wings
 import com.tristansmp.wings.commands.CommandDeliver
 import com.tristansmp.wings.commands.CommandDeposit
 import com.tristansmp.wings.commands.CommandLink
+import com.tristansmp.wings.commands.CommandPackage
 import com.tristansmp.wings.events.ChatListener
 import com.tristansmp.wings.lib.ConfigManager
 import com.tristansmp.wings.lib.MemoryStore
@@ -59,6 +60,7 @@ class Wings : JavaPlugin() {
         this.getCommand("link")?.setExecutor(CommandLink())
         this.getCommand("deposit")?.setExecutor(CommandDeposit())
         this.getCommand("deliver")?.setExecutor(CommandDeliver())
+        this.getCommand("package")?.setExecutor(CommandPackage())
     }
 
     override fun onDisable() {
