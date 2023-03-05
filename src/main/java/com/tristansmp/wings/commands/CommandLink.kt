@@ -15,7 +15,6 @@ import org.bukkit.entity.Player
 data class LinkPayload(val uuid: String, val code: String)
 
 class CommandLink : CommandExecutor {
-    @OptIn(InternalAPI::class)
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player || Wings.instance.config.config.token == null || Wings.instance.config.config.wingsApiEndpoint == null) {
             return false

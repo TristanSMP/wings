@@ -18,7 +18,6 @@ import org.bukkit.inventory.ItemStack
 data class DepositPayload(val uuid: String, val amount: Int)
 
 class CommandDeposit : CommandExecutor {
-    @OptIn(InternalAPI::class)
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) {
             sender.sendMessage("You must be a player to use this command!")
@@ -30,7 +29,7 @@ class CommandDeposit : CommandExecutor {
         val token = Wings.instance.config.config.token ?: return false
         val endpoint = Wings.instance.config.config.wingsApiEndpoint ?: return false
 
-        if (!sender.hasPermission("tsmpmarkets.deposit")) {
+        if (!sender.hasPermission("wings.deposit")) {
             sender.sendMessage(ChatRes.error("You don't have permission to use this command!"))
             return true
         }

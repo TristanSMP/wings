@@ -1,5 +1,6 @@
 package com.tristansmp.wings
 
+import com.tristansmp.wings.commands.CommandDeliver
 import com.tristansmp.wings.commands.CommandDeposit
 import com.tristansmp.wings.commands.CommandLink
 import com.tristansmp.wings.events.ChatListener
@@ -57,6 +58,7 @@ class Wings : JavaPlugin() {
 
         this.getCommand("link")?.setExecutor(CommandLink())
         this.getCommand("deposit")?.setExecutor(CommandDeposit())
+        this.getCommand("deliver")?.setExecutor(CommandDeliver())
     }
 
     override fun onDisable() {
