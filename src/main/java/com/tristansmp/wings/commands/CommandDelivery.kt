@@ -34,7 +34,7 @@ class CommandDeliver : CommandExecutor {
         val token = Wings.instance.config.config.token ?: return false
         val endpoint = Wings.instance.config.config.wingsApiEndpoint ?: return false
 
-        if (!sender.hasPermission("wings.delivery")) {
+        if (!sender.hasPermission("wings.deliver")) {
             sender.sendMessage(ChatRes.error("You don't have permission to use this command!"))
             return true
         }
