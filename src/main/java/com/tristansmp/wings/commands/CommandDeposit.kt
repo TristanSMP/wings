@@ -4,6 +4,7 @@ import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.ChatRes
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.bukkit.Material
@@ -12,7 +13,6 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import kotlin.concurrent.thread
 
 @Serializable
 data class DepositPayload(val uuid: String, val amount: Int)
@@ -53,8 +53,8 @@ class CommandDeposit : CommandExecutor {
 
         player.inventory.setItemInMainHand(null)
 
-        thread {
-            runBlocking {
+        runBlocking {
+            launch {
                 try {
 
                     Wings.instance.logger.info("$endpoint/marketDeposit")

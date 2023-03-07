@@ -3,13 +3,13 @@ package com.tristansmp.wings.commands
 import com.tristansmp.wings.Wings
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import kotlin.concurrent.thread
 
 @Serializable
 data class LinkPayload(val uuid: String, val code: String)
@@ -31,8 +31,8 @@ class CommandLink : CommandExecutor {
 
         sender.sendMessage("§d[Wings] §aLinking account...")
 
-        thread {
-            runBlocking {
+        runBlocking {
+            launch {
                 try {
                     val response = Wings.instance.http.post("$endpoint/linkAccount") {
                         header("Authorization", token)

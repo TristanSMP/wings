@@ -6,13 +6,13 @@ import com.tristansmp.wings.lib.SerializeUtils.Companion.itemStackFromBase64
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import kotlin.concurrent.thread
 
 @Serializable
 data class DeliveryPayload(val uuid: String)
@@ -37,9 +37,8 @@ class CommandDeliver : CommandExecutor {
             return true
         }
 
-
-        thread {
-            runBlocking {
+        runBlocking {
+            launch {
                 try {
 
                     Wings.instance.logger.info("$endpoint/marketDeposit")
@@ -55,7 +54,7 @@ class CommandDeliver : CommandExecutor {
 
                         if (body.items.isEmpty()) {
                             player.sendMessage(ChatRes.error("You have no items to deliver!"))
-                            return@runBlocking
+                            return@launch
                         }
 
                         for (item in body.items) {
