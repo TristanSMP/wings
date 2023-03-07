@@ -16,6 +16,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import kotlin.concurrent.thread
 
 @Serializable
 data class PackagePayload(val uuid: String, val price: Int, val item: JsonObject)
@@ -73,29 +74,30 @@ class CommandPackage : CommandExecutor {
 
         player.inventory.setItemInMainHand(null)
 
+        thread {
+            runBlocking {
+                try {
 
-        runBlocking {
-            try {
+                    Wings.instance.logger.info("$endpoint/marketPackage")
 
-                Wings.instance.logger.info("$endpoint/marketPackage")
+                    val response = Wings.instance.http.post("$endpoint/marketPackage") {
+                        header("Authorization", token)
+                        contentType(ContentType.Application.Json)
+                        setBody(PackagePayload(uuid, price, JsonObject(item.toJson().toJsonObject())))
+                    }
 
-                val response = Wings.instance.http.post("$endpoint/marketPackage") {
-                    header("Authorization", token)
-                    contentType(ContentType.Application.Json)
-                    setBody(PackagePayload(uuid, price, JsonObject(item.toJson().toJsonObject())))
+                    if (response.status.value == 200) {
+                        player.sendMessage(ChatRes.success("Successfully listed item for $price diamonds!"))
+                    } else {
+                        val nonce = (0..100000).random()
+                        Wings.instance.logger.warning("Failed to package item for ${player.name} (${player.uniqueId})! (Nonce: $nonce)")
+                        Wings.instance.logger.warning("Nonce: $nonce b64: ${SerializeUtils.itemStackToBase64(item)}")
+                        player.sendMessage(ChatRes.error("Failed to package! Screenshot this error, create a ticket and send it! (Nonce: $nonce)"))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    player.sendMessage(ChatRes.error("Failed to package!"))
                 }
-
-                if (response.status.value == 200) {
-                    player.sendMessage(ChatRes.success("Successfully listed item for $price diamonds!"))
-                } else {
-                    val nonce = (0..100000).random()
-                    Wings.instance.logger.warning("Failed to package item for ${player.name} (${player.uniqueId})! (Nonce: $nonce)")
-                    Wings.instance.logger.warning("Nonce: $nonce b64: ${SerializeUtils.itemStackToBase64(item)}")
-                    player.sendMessage(ChatRes.error("Failed to package! Screenshot this error, create a ticket and send it! (Nonce: $nonce)"))
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                player.sendMessage(ChatRes.error("Failed to package!"))
             }
         }
 
