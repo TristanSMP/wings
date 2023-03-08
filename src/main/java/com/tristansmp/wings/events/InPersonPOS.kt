@@ -39,6 +39,10 @@ class InPersonPOS : Listener {
 
             val scheduler = Wings.instance.server.scheduler
 
+            scheduler.runTaskLater(Wings.instance, Runnable {
+                rateLimits.remove(block.location.toString())
+            }, 20)
+
             scheduler.runTaskAsynchronously(Wings.instance, Runnable {
                 runBlocking {
                     val signShop = Wings.instance.inPersonPOSManager.GetSignShop(block.location) ?: return@runBlocking
