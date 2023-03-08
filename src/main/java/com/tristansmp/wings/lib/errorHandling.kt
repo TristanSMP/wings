@@ -1,5 +1,6 @@
 package com.tristansmp.wings.lib
 
+import com.tristansmp.wings.Wings
 import io.ktor.client.call.*
 import io.ktor.client.statement.*
 import kotlinx.serialization.Serializable
@@ -11,10 +12,17 @@ data class PossibleErrorPayload(
 )
 
 suspend fun HandleGatewayError(res: HttpResponse, player: Player) {
+    val scheduler = Wings.instance.server.scheduler
+
     try {
         val body = res.body<PossibleErrorPayload>()
-        player.sendMessage(ChatRes.error(body.userLandError))
+
+        scheduler.runTask(Wings.instance, Runnable {
+            player.sendMessage(ChatRes.error(body.userLandError))
+        })
     } catch (e: Exception) {
-        player.sendMessage("An unknown error occurred.")
+        scheduler.runTask(Wings.instance, Runnable {
+            player.sendMessage(ChatRes.error("An unknown error occurred."))
+        })
     }
 }
