@@ -20,3 +20,7 @@ commands:
     description: Package an item to sell on the TSMP market
     usage: /package <price>
     permission: wings.package
+  create-sign-shop:
+    description: Create a sign shop
+    usage: /create-sign-shop <b64key>
+    permission: wings.create-sign-shop

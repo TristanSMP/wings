@@ -1,10 +1,9 @@
 package com.tristansmp.wings
 
-import com.tristansmp.wings.commands.CommandDeliver
-import com.tristansmp.wings.commands.CommandDeposit
-import com.tristansmp.wings.commands.CommandLink
-import com.tristansmp.wings.commands.CommandPackage
+import com.tristansmp.wings.InPersonPOS.InPersonPOSManager
+import com.tristansmp.wings.commands.*
 import com.tristansmp.wings.events.ChatListener
+import com.tristansmp.wings.events.InPersonPOS
 import com.tristansmp.wings.lib.ConfigManager
 import com.tristansmp.wings.lib.MemoryStore
 import com.tristansmp.wings.plugins.configureHTTP
@@ -29,6 +28,7 @@ class Wings : JavaPlugin() {
 
     lateinit var config: ConfigManager
     lateinit var mstore: MemoryStore
+    lateinit var inPersonPOSManager: InPersonPOSManager
     var lp: LuckPerms? = null
     val http = HttpClient(Java) {
         install(ContentNegotiation) {
@@ -46,6 +46,7 @@ class Wings : JavaPlugin() {
 
         config = ConfigManager()
         mstore = MemoryStore()
+        inPersonPOSManager = InPersonPOSManager()
 
         val provider = Bukkit.getServicesManager().getRegistration(
             LuckPerms::class.java
@@ -56,11 +57,14 @@ class Wings : JavaPlugin() {
         }
 
         server.pluginManager.registerEvents(ChatListener(), this)
+        server.pluginManager.registerEvents(InPersonPOS(), this)
 
         this.getCommand("link")?.setExecutor(CommandLink())
         this.getCommand("deposit")?.setExecutor(CommandDeposit())
         this.getCommand("deliver")?.setExecutor(CommandDeliver())
         this.getCommand("package")?.setExecutor(CommandPackage())
+        this.getCommand("create-sign-shop")?.setExecutor(CommandCreateSignShop())
+
     }
 
     override fun onDisable() {

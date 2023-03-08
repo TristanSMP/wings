@@ -4,6 +4,7 @@ import com.tristansmp.wings.Wings
 import com.tristansmp.wings.routes.Health
 import com.tristansmp.wings.routes.LuckPerms
 import com.tristansmp.wings.routes.Player
+import com.tristansmp.wings.routes.SignShop
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.application.ApplicationCallPipeline.ApplicationPhase.Plugins
@@ -35,5 +36,6 @@ fun Application.configureRouting() {
         Health()
         Player()
         LuckPerms()
+        SignShop()
     }
 }
