@@ -6,7 +6,6 @@ import com.tristansmp.wings.lib.SerializeUtils.Companion.itemStackFromBase64
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.bukkit.command.Command
@@ -37,11 +36,11 @@ class CommandDeliver : CommandExecutor {
             return true
         }
 
-        runBlocking {
-            launch {
-                try {
+        val scheduler = Wings.instance.server.scheduler
 
-                    Wings.instance.logger.info("$endpoint/marketDeposit")
+        scheduler.runTaskAsynchronously(Wings.instance, Runnable {
+            runBlocking {
+                try {
 
                     val response = Wings.instance.http.post("$endpoint/marketDelivery") {
                         header("Authorization", token)
@@ -49,12 +48,12 @@ class CommandDeliver : CommandExecutor {
                         setBody(DeliveryPayload(uuid))
                     }
 
-                    if (response.status.value == 200) {
+                    if (response.status.isSuccess()) {
                         val body = response.body<DeliveryResponse>()
 
                         if (body.items.isEmpty()) {
                             player.sendMessage(ChatRes.error("You have no items to deliver!"))
-                            return@launch
+                            return@runBlocking
                         }
 
                         for (item in body.items) {
@@ -80,8 +79,7 @@ class CommandDeliver : CommandExecutor {
                     player.sendMessage(ChatRes.error("Failed to deliver!"))
                 }
             }
-        }
-
+        })
         return true
     }
 }

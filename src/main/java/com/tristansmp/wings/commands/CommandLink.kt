@@ -3,7 +3,6 @@ package com.tristansmp.wings.commands
 import com.tristansmp.wings.Wings
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.bukkit.command.Command
@@ -31,8 +30,10 @@ class CommandLink : CommandExecutor {
 
         sender.sendMessage("§d[Wings] §aLinking account...")
 
-        runBlocking {
-            launch {
+        val scheduler = Wings.instance.server.scheduler
+
+        scheduler.runTaskAsynchronously(Wings.instance, Runnable {
+            runBlocking {
                 try {
                     val response = Wings.instance.http.post("$endpoint/linkAccount") {
                         header("Authorization", token)
@@ -49,7 +50,7 @@ class CommandLink : CommandExecutor {
                     sender.sendMessage("§d[Wings] §cFailed to link account!")
                 }
             }
-        }
+        })
 
         return true
     }

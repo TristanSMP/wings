@@ -7,7 +7,6 @@ import com.tristansmp.wings.lib.toJsonObject
 import com.tristansmp.wings.routes.toJson
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
@@ -74,8 +73,10 @@ class CommandPackage : CommandExecutor {
 
         player.inventory.setItemInMainHand(null)
 
-        runBlocking {
-            launch {
+        val scheduler = Wings.instance.server.scheduler
+
+        scheduler.runTaskAsynchronously(Wings.instance, Runnable {
+            runBlocking {
                 try {
 
                     Wings.instance.logger.info("$endpoint/marketPackage")
@@ -99,7 +100,7 @@ class CommandPackage : CommandExecutor {
                     player.sendMessage(ChatRes.error("Failed to package!"))
                 }
             }
-        }
+        })
 
         return true
     }

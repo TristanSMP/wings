@@ -4,7 +4,6 @@ import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.ChatRes
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.bukkit.Material
@@ -53,8 +52,10 @@ class CommandDeposit : CommandExecutor {
 
         player.inventory.setItemInMainHand(null)
 
-        runBlocking {
-            launch {
+        val scheduler = Wings.instance.server.scheduler
+
+        scheduler.runTaskAsynchronously(Wings.instance, Runnable {
+            runBlocking {
                 try {
 
                     Wings.instance.logger.info("$endpoint/marketDeposit")
@@ -77,7 +78,7 @@ class CommandDeposit : CommandExecutor {
                     player.sendMessage(ChatRes.error("Failed to deposit!"))
                 }
             }
-        }
+        })
 
         return true
     }
