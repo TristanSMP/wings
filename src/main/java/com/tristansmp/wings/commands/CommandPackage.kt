@@ -87,7 +87,7 @@ class CommandPackage : CommandExecutor {
                         setBody(PackagePayload(uuid, price, JsonObject(item.toJson().toJsonObject())))
                     }
 
-                    if (response.status.value == 200) {
+                    if (response.status.isSuccess()) {
                         player.sendMessage(ChatRes.success("Successfully listed item for $price diamonds!"))
                     } else {
                         val nonce = (0..100000).random()
