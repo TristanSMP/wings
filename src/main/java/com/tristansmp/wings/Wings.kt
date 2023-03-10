@@ -37,17 +37,21 @@ class Wings : JavaPlugin() {
     }
 
     override fun onEnable() {
+        // API
         Thread {
             embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
                 .start(wait = true)
         }.start()
 
+        // Singleton
         instance = this
-
+        
+        // Managers
         config = ConfigManager()
         mstore = MemoryStore()
         inPersonPOSManager = InPersonPOSManager()
 
+        // Luckperms Hook
         val provider = Bukkit.getServicesManager().getRegistration(
             LuckPerms::class.java
         )
@@ -56,9 +60,11 @@ class Wings : JavaPlugin() {
             lp = provider.provider
         }
 
+        // Register event listeners
         server.pluginManager.registerEvents(ChatListener(), this)
         server.pluginManager.registerEvents(InPersonPOS(), this)
 
+        // Link commands
         this.getCommand("link")?.setExecutor(CommandLink())
         this.getCommand("deposit")?.setExecutor(CommandDeposit())
         this.getCommand("deliver")?.setExecutor(CommandDeliver())
