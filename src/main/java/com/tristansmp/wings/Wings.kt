@@ -2,6 +2,7 @@ package com.tristansmp.wings
 
 import com.tristansmp.wings.InPersonPOS.InPersonPOSManager
 import com.tristansmp.wings.commands.*
+import com.tristansmp.wings.events.BlogBook
 import com.tristansmp.wings.events.ChatListener
 import com.tristansmp.wings.events.InPersonPOS
 import com.tristansmp.wings.lib.ConfigManager
@@ -9,16 +10,23 @@ import com.tristansmp.wings.lib.MemoryStore
 import com.tristansmp.wings.plugins.configureHTTP
 import com.tristansmp.wings.plugins.configureRouting
 import com.tristansmp.wings.plugins.configureSerialization
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import net.luckperms.api.LuckPerms
-import org.bukkit.Bukkit
-import org.bukkit.plugin.java.JavaPlugin
 import io.ktor.client.*
 import io.ktor.client.engine.java.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.luckperms.api.LuckPerms
+import org.bukkit.Bukkit
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ShapedRecipe
+import org.bukkit.persistence.PersistentDataType
+import org.bukkit.plugin.java.JavaPlugin
+
 
 class Wings : JavaPlugin() {
 
@@ -29,6 +37,7 @@ class Wings : JavaPlugin() {
     lateinit var config: ConfigManager
     lateinit var mstore: MemoryStore
     lateinit var inPersonPOSManager: InPersonPOSManager
+    lateinit var namespace: Namespace
     var lp: LuckPerms? = null
     val http = HttpClient(Java) {
         install(ContentNegotiation) {
@@ -45,11 +54,12 @@ class Wings : JavaPlugin() {
 
         // Singleton
         instance = this
-        
+
         // Managers
         config = ConfigManager()
         mstore = MemoryStore()
         inPersonPOSManager = InPersonPOSManager()
+        namespace = Namespace(this)
 
         // Luckperms Hook
         val provider = Bukkit.getServicesManager().getRegistration(
@@ -63,6 +73,7 @@ class Wings : JavaPlugin() {
         // Register event listeners
         server.pluginManager.registerEvents(ChatListener(), this)
         server.pluginManager.registerEvents(InPersonPOS(), this)
+        server.pluginManager.registerEvents(BlogBook(), this)
 
         // Link commands
         this.getCommand("link")?.setExecutor(CommandLink())
@@ -71,6 +82,32 @@ class Wings : JavaPlugin() {
         this.getCommand("package")?.setExecutor(CommandPackage())
         this.getCommand("create-sign-shop")?.setExecutor(CommandCreateSignShop())
 
+        // Blog book recipe register
+        val item = ItemStack(Material.WRITABLE_BOOK)
+
+        val meta = item.itemMeta
+
+        meta.displayName(
+            LegacyComponentSerializer.legacyAmpersand()
+                .deserialize("&6Blog Book")
+        )
+
+        meta.persistentDataContainer.set(
+            namespace.BlogBookTag,
+            PersistentDataType.STRING,
+            "true"
+        )
+
+        item.itemMeta = meta
+
+        val key = NamespacedKey(this, "blog_book")
+        val recipe = ShapedRecipe(key, item)
+
+        recipe.shape("DB")
+        recipe.setIngredient('D', Material.DIAMOND)
+        recipe.setIngredient('B', Material.WRITABLE_BOOK)
+
+        server.addRecipe(recipe)
     }
 
     override fun onDisable() {
