@@ -5,6 +5,7 @@ import com.tristansmp.wings.commands.*
 import com.tristansmp.wings.events.BlogBook
 import com.tristansmp.wings.events.ChatListener
 import com.tristansmp.wings.events.InPersonPOS
+import com.tristansmp.wings.events.RecipeHandler
 import com.tristansmp.wings.lib.ConfigManager
 import com.tristansmp.wings.lib.MemoryStore
 import com.tristansmp.wings.plugins.configureHTTP
@@ -17,6 +18,7 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.luckperms.api.LuckPerms
 import org.bukkit.Bukkit
@@ -34,10 +36,13 @@ class Wings : JavaPlugin() {
         lateinit var instance: Wings
     }
 
+    val registeredRecipes = mutableListOf<NamespacedKey>()
+
     lateinit var config: ConfigManager
     lateinit var mstore: MemoryStore
     lateinit var inPersonPOSManager: InPersonPOSManager
     lateinit var namespace: Namespace
+
     var lp: LuckPerms? = null
     val http = HttpClient(Java) {
         install(ContentNegotiation) {
@@ -74,6 +79,7 @@ class Wings : JavaPlugin() {
         server.pluginManager.registerEvents(ChatListener(), this)
         server.pluginManager.registerEvents(InPersonPOS(), this)
         server.pluginManager.registerEvents(BlogBook(), this)
+        server.pluginManager.registerEvents(RecipeHandler(), this)
 
         // Link commands
         this.getCommand("link")?.setExecutor(CommandLink())
@@ -87,10 +93,14 @@ class Wings : JavaPlugin() {
 
         val meta = item.itemMeta
 
-        meta.displayName(
+        val lore: MutableList<Component> = if (meta.hasLore()) meta.lore()!! else mutableListOf()
+
+        lore.add(
             LegacyComponentSerializer.legacyAmpersand()
-                .deserialize("&6Blog Book")
+                .deserialize("&f&r&bWireless Antenna &7(connected to tsmp blog)")
         )
+
+        meta.lore(lore)
 
         meta.persistentDataContainer.set(
             namespace.BlogBookTag,
@@ -108,6 +118,7 @@ class Wings : JavaPlugin() {
         recipe.setIngredient('B', Material.WRITABLE_BOOK)
 
         server.addRecipe(recipe)
+        registeredRecipes.add(key)
     }
 
     override fun onDisable() {

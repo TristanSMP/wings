@@ -3,6 +3,8 @@ package com.tristansmp.wings.events
 import com.tristansmp.wings.Wings
 import com.tristansmp.wings.commands.PackagePayload
 import com.tristansmp.wings.lib.HandleGatewayError
+import com.tristansmp.wings.lib.sendInfo
+import com.tristansmp.wings.lib.sendSuccess
 import com.tristansmp.wings.lib.toJsonObject
 import com.tristansmp.wings.routes.toJson
 import io.ktor.client.request.*
@@ -38,6 +40,7 @@ class BlogBook : Listener {
         val titleString = title.content()
 
         Wings.instance.logger.info("took a book from ${player.name} with title $titleString and pages $pages")
+        event.player.sendInfo("Submitting \"$titleString\"...")
 
         val scheduler = Wings.instance.server.scheduler
 
@@ -51,6 +54,8 @@ class BlogBook : Listener {
 
                 if (!response.status.isSuccess()) {
                     HandleGatewayError(response, player)
+                } else {
+                    player.sendSuccess("Successfully submitted! Your blog post will be edited and considered for publication.")
                 }
             }
         })
