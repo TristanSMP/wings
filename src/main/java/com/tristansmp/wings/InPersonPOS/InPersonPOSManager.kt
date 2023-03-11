@@ -3,6 +3,7 @@ package com.tristansmp.wings.InPersonPOS
 import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.ChatRes
 import com.tristansmp.wings.lib.HandleGatewayError
+import com.tristansmp.wings.lib.sendError
 import com.tristansmp.wings.lib.strSerialize
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -142,7 +143,7 @@ class InPersonPOSManager {
         if (response.status.isSuccess()) {
             GetSignShop(shop.location) // Update the sign
             scheduler.runTask(Wings.instance, Runnable {
-                player.sendMessage(ChatRes.success("Sent your bought item into transit, use /deliver to receive it!"))
+                player.sendError("Sent your bought item into transit, use /deliver to receive it!")
             })
         } else {
             GetSignShop(shop.location) // Update the sign

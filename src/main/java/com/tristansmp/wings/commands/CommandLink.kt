@@ -1,6 +1,9 @@
 package com.tristansmp.wings.commands
 
 import com.tristansmp.wings.Wings
+import com.tristansmp.wings.lib.sendError
+import com.tristansmp.wings.lib.sendInfo
+import com.tristansmp.wings.lib.sendSuccess
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
@@ -28,7 +31,7 @@ class CommandLink : CommandExecutor {
         val token = Wings.instance.config.config.token ?: return false
         val endpoint = Wings.instance.config.config.wingsApiEndpoint ?: return false
 
-        sender.sendMessage("§d[Wings] §aLinking account...")
+        sender.sendInfo("Linking account...")
 
         val scheduler = Wings.instance.server.scheduler
 
@@ -42,12 +45,12 @@ class CommandLink : CommandExecutor {
                     }
 
                     if (response.status.value == 200) {
-                        sender.sendMessage("§d[Wings] §aSuccessfully linked account!")
+                        sender.sendSuccess("Successfully linked account!")
                     } else {
-                        sender.sendMessage("§d[Wings] §cFailed to link account!")
+                        sender.sendError("Failed to link account!")
                     }
                 } catch (e: Exception) {
-                    sender.sendMessage("§d[Wings] §cFailed to link account!")
+                    sender.sendError("Failed to link account!")
                 }
             }
         })

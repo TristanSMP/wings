@@ -18,11 +18,11 @@ suspend fun HandleGatewayError(res: HttpResponse, player: Player) {
         val body = res.body<PossibleErrorPayload>()
 
         scheduler.runTask(Wings.instance, Runnable {
-            player.sendMessage(ChatRes.error(body.userLandError))
+            player.sendError(body.userLandError)
         })
     } catch (e: Exception) {
         scheduler.runTask(Wings.instance, Runnable {
-            player.sendMessage(ChatRes.error("An unknown error occurred."))
+            player.sendError("An unknown error occurred.")
         })
     }
 }

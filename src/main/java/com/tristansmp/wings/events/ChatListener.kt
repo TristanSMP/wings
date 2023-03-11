@@ -1,6 +1,9 @@
 package com.tristansmp.wings.events
 
 import com.tristansmp.wings.Wings
+import com.tristansmp.wings.lib.sendError
+import com.tristansmp.wings.lib.sendInfo
+import com.tristansmp.wings.lib.sendSuccess
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.event.EventHandler
@@ -30,11 +33,11 @@ class ChatListener : Listener {
 
             Wings.instance.mstore.set("cc:${event.player.uniqueId}:results", content)
 
-            event.player.sendMessage("§d[Wings] §aMessage collected.")
+            event.player.sendSuccess("Message collected.")
 
             Wings.instance.mstore.remove("cc:${event.player.uniqueId}:needs_collection")
         } catch (e: ClassCastException) {
-            event.player.sendMessage("§d[Wings] §cMessage could not be collected.")
+            event.player.sendError("Message could not be collected.")
         }
     }
 }

@@ -2,6 +2,8 @@ package com.tristansmp.wings.commands
 
 import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.ChatRes
+import com.tristansmp.wings.lib.sendError
+import com.tristansmp.wings.lib.sendSuccess
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
@@ -29,24 +31,24 @@ class CommandDeposit : CommandExecutor {
         val endpoint = Wings.instance.config.config.wingsApiEndpoint ?: return false
 
         if (!sender.hasPermission("wings.deposit")) {
-            sender.sendMessage(ChatRes.error("You don't have permission to use this command!"))
+            sender.sendError("You don't have permission to use this command!")
             return true
         }
 
         val item: ItemStack = player.inventory.itemInMainHand
 
         if (item == null) {
-            sender.sendMessage(ChatRes.error("You must be holding an item to deposit!"))
+            sender.sendError("You must be holding an item to deposit!")
             return true
         }
 
         if (item.type == Material.AIR) {
-            sender.sendMessage(ChatRes.error("You must be holding an item to deposit!"))
+            sender.sendError("You must be holding an item to deposit!")
             return true
         }
 
         if (item.type != Material.DIAMOND) {
-            sender.sendMessage(ChatRes.error("You must be holding a diamond/diamonds to deposit!"))
+            sender.sendError("You must be holding a diamond/diamonds to deposit!")
             return true
         }
 
@@ -67,15 +69,15 @@ class CommandDeposit : CommandExecutor {
                     }
 
                     if (response.status.value == 200) {
-                        player.sendMessage(ChatRes.success("Successfully deposited ${item.amount} diamonds!"))
+                        player.sendSuccess("Successfully deposited ${item.amount} diamonds!")
                     } else {
                         val nonce = (0..100000).random()
                         Wings.instance.logger.warning("Failed to deposit ${item.amount} diamonds for ${player.name} (${player.uniqueId})! (Nonce: $nonce)")
-                        player.sendMessage(ChatRes.error("Failed to deposit! Screenshot this error, create a ticket and send it! (Nonce: $nonce)"))
+                        player.sendError("Failed to deposit! Screenshot this error, create a ticket and send it! (Nonce: $nonce)")
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    player.sendMessage(ChatRes.error("Failed to deposit!"))
+                    player.sendError("Failed to deposit!")
                 }
             }
         })

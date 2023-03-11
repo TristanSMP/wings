@@ -3,6 +3,8 @@ package com.tristansmp.wings.commands
 import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.ChatRes
 import com.tristansmp.wings.lib.SerializeUtils.Companion.itemStackFromBase64
+import com.tristansmp.wings.lib.sendError
+import com.tristansmp.wings.lib.sendSuccess
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -32,7 +34,7 @@ class CommandDeliver : CommandExecutor {
         val endpoint = Wings.instance.config.config.wingsApiEndpoint ?: return false
 
         if (!sender.hasPermission("wings.deliver")) {
-            sender.sendMessage(ChatRes.error("You don't have permission to use this command!"))
+            sender.sendError("You don't have permission to use this command!")
             return true
         }
 
@@ -40,8 +42,9 @@ class CommandDeliver : CommandExecutor {
 
         scheduler.runTaskAsynchronously(Wings.instance, Runnable {
             runBlocking {
-                try {
+                val nonce = (0..100000).random()
 
+                try {
                     val response = Wings.instance.http.post("$endpoint/marketDelivery") {
                         header("Authorization", token)
                         contentType(ContentType.Application.Json)
@@ -52,31 +55,28 @@ class CommandDeliver : CommandExecutor {
                         val body = response.body<DeliveryResponse>()
 
                         if (body.items.isEmpty()) {
-                            player.sendMessage(ChatRes.error("You have no items to deliver!"))
+                            player.sendError("You have no items to deliver!")
                             return@runBlocking
                         }
 
                         for (item in body.items) {
                             if (player.inventory.firstEmpty() == -1) {
-                                player.sendMessage(
-                                    ChatRes.error("You don't have enough space in your inventory! So I'm dropping it!")
-                                )
+                                player.sendError("You don't have enough space in your inventory! So I'm dropping it!")
                                 player.world.dropItem(player.location, itemStackFromBase64(item))
                             } else {
                                 player.inventory.addItem(itemStackFromBase64(item))
                             }
                         }
 
-                        player.sendMessage(ChatRes.success("Delivered ${body.items.size} items!"))
+                        player.sendSuccess("Delivered ${body.items.size} items!")
 
                     } else {
-                        val nonce = (0..100000).random()
                         Wings.instance.logger.warning("Failed to deliver items for ${player.name} (${player.uniqueId})! (Nonce: $nonce)")
-                        player.sendMessage(ChatRes.error("Failed to deliver! Screenshot this error, create a ticket and send it! (Nonce: $nonce)"))
+                        player.sendError("Failed to deliver! Screenshot this error, create a ticket and send it! (Nonce: $nonce)")
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    player.sendMessage(ChatRes.error("Failed to deliver!"))
+                    player.sendError("Fatal error! Please screenshot this error and create a ticket! (Nonce: ${nonce})")
                 }
             }
         })

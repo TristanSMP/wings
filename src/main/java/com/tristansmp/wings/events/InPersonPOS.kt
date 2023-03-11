@@ -2,6 +2,9 @@ package com.tristansmp.wings.events
 
 import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.ChatRes
+import com.tristansmp.wings.lib.sendError
+import com.tristansmp.wings.lib.sendInfo
+import com.tristansmp.wings.lib.sendSuccess
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.EventHandler
@@ -30,7 +33,7 @@ class InPersonPOS : Listener {
         if (block.type.name.contains("SIGN")) {
             if (rateLimits.containsKey(block.location.toString())) {
                 if (System.currentTimeMillis() - rateLimits[block.location.toString()]!! < 1000) {
-                    event.player.sendMessage(ChatRes.error("Please wait a second before interacting with this sign shop again!"))
+                    event.player.sendError("Please wait a second before interacting with this sign shop again!")
                     return
                 }
             }
@@ -48,10 +51,8 @@ class InPersonPOS : Listener {
                     val signShop = Wings.instance.inPersonPOSManager.GetSignShop(block.location) ?: return@runBlocking
 
                     scheduler.runTask(Wings.instance, Runnable {
-                        Wings.instance.logger.info("player uuid: ${event.player.uniqueId}")
-
                         if (signShop.owner == event.player.uniqueId) {
-                            event.player.sendMessage(ChatRes.error("Refreshed sign shop!"))
+                            event.player.sendSuccess("Refreshed sign shop!")
                             return@Runnable
                         } else {
                             scheduler.runTaskAsynchronously(Wings.instance, Runnable {
@@ -79,9 +80,9 @@ class InPersonPOS : Listener {
                         Wings.instance.inPersonPOSManager.GetSignShop(event.block.location) ?: return@runBlocking
 
                     if (signShop.owner != event.player.uniqueId) {
-                        event.player.sendMessage(ChatRes.error("you shouldn't of done that..."))
+                        event.player.sendError("you shouldn't of done that...")
                     } else {
-                        event.player.sendMessage(ChatRes.success("You have broken a sign shop!"))
+                        event.player.sendSuccess("Deleted sign shop!")
                     }
 
                     Wings.instance.inPersonPOSManager.DeleteSignShop(event.block.location, event.player)
