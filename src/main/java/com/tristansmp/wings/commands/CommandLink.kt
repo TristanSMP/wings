@@ -22,6 +22,11 @@ class CommandLink : CommandExecutor {
             return false
         }
 
+        if (!Wings.instance.commandRatelimiter.canRunCommand(sender)) {
+            sender.sendError("You are sending commands too fast! Please wait a few seconds before trying again.")
+            return true
+        }
+
         if (args == null || args.isEmpty()) {
             return false
         }

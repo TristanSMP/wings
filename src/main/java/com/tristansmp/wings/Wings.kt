@@ -6,8 +6,10 @@ import com.tristansmp.wings.events.BlogBook
 import com.tristansmp.wings.events.ChatListener
 import com.tristansmp.wings.events.InPersonPOS
 import com.tristansmp.wings.events.RecipeHandler
+import com.tristansmp.wings.lib.CommandRatelimiter
 import com.tristansmp.wings.lib.ConfigManager
 import com.tristansmp.wings.lib.MemoryStore
+import com.tristansmp.wings.lib.RestartManager
 import com.tristansmp.wings.plugins.configureHTTP
 import com.tristansmp.wings.plugins.configureRouting
 import com.tristansmp.wings.plugins.configureSerialization
@@ -42,6 +44,8 @@ class Wings : JavaPlugin() {
     lateinit var mstore: MemoryStore
     lateinit var inPersonPOSManager: InPersonPOSManager
     lateinit var namespace: Namespace
+    lateinit var commandRatelimiter: CommandRatelimiter
+    lateinit var restartManager: RestartManager
 
     var lp: LuckPerms? = null
     val http = HttpClient(Java) {
@@ -65,6 +69,8 @@ class Wings : JavaPlugin() {
         mstore = MemoryStore()
         inPersonPOSManager = InPersonPOSManager()
         namespace = Namespace(this)
+        commandRatelimiter = CommandRatelimiter(this)
+        restartManager = RestartManager(this)
 
         // Luckperms Hook
         val provider = Bukkit.getServicesManager().getRegistration(
@@ -87,6 +93,7 @@ class Wings : JavaPlugin() {
         this.getCommand("deliver")?.setExecutor(CommandDeliver())
         this.getCommand("package")?.setExecutor(CommandPackage())
         this.getCommand("create-sign-shop")?.setExecutor(CommandCreateSignShop())
+        this.getCommand("restart-when-no-players")?.setExecutor(CommandRestartWhenNoPlayers())
 
         // Blog book recipe register
         val item = ItemStack(Material.WRITABLE_BOOK)

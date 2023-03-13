@@ -25,6 +25,11 @@ class CommandPackage : CommandExecutor {
             return true
         }
 
+        if (!Wings.instance.commandRatelimiter.canRunCommand(sender)) {
+            sender.sendError("You are sending commands too fast! Please wait a few seconds before trying again.")
+            return true
+        }
+
         val player = sender
         val uuid = player.uniqueId.toString()
         val token = Wings.instance.config.config.token ?: return false

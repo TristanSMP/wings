@@ -24,3 +24,7 @@ commands:
     description: Create a sign shop
     usage: /create-sign-shop <b64key>
     permission: wings.create-sign-shop
+  restart-when-no-players:
+    description: Restart the server when no players are online
+    usage: /restart-when-no-players
+    permission: wings.restart-when-no-players

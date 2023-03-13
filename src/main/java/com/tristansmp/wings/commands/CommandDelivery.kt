@@ -28,6 +28,11 @@ class CommandDeliver : CommandExecutor {
             return true
         }
 
+        if (!Wings.instance.commandRatelimiter.canRunCommand(sender)) {
+            sender.sendError("You are sending commands too fast! Please wait a few seconds before trying again.")
+            return true
+        }
+
         val player = sender
         val uuid = player.uniqueId.toString()
         val token = Wings.instance.config.config.token ?: return false
@@ -60,12 +65,14 @@ class CommandDeliver : CommandExecutor {
                         }
 
                         for (item in body.items) {
-                            if (player.inventory.firstEmpty() == -1) {
-                                player.sendError("You don't have enough space in your inventory! So I'm dropping it!")
-                                player.world.dropItem(player.location, itemStackFromBase64(item))
-                            } else {
-                                player.inventory.addItem(itemStackFromBase64(item))
-                            }
+                            scheduler.runTask(Wings.instance, Runnable {
+                                if (player.inventory.firstEmpty() == -1) {
+                                    player.sendError("You don't have enough space in your inventory! So I'm dropping it!")
+                                    player.world.dropItem(player.location, itemStackFromBase64(item))
+                                } else {
+                                    player.inventory.addItem(itemStackFromBase64(item))
+                                }
+                            })
                         }
 
                         player.sendSuccess("Delivered ${body.items.size} items!")

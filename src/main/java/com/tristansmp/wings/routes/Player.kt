@@ -16,6 +16,7 @@ import org.bukkit.block.ShulkerBox
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BlockStateMeta
+import org.bukkit.inventory.meta.BookMeta
 import java.util.*
 
 
@@ -78,13 +79,21 @@ fun ItemStack.toJson(): Map<String, Any?> {
         itemsInside = box.inventory.contents.map { it?.toJson() }
     }
 
+    val enchantments = enchantments.map { it.key.name to it.value }.toMap().toMutableMap()
+
+    if (type == Material.ENCHANTED_BOOK) {
+        val book = itemMeta as BookMeta
+
+        book.enchants.forEach { enchantments[it.key.name] = it.value }
+    }
+
     return mapOf(
         "name" to itemMeta.getName(),
         "id" to type.name,
         "type" to if (type.isBlock) "block" else "item",
         "amount" to amount,
         "durability" to durability,
-        "enchantments" to enchantments.map { it.key.name to it.value }.toMap(),
+        "enchantments" to enchantments,
         "b64" to SerializeUtils.itemStackToBase64(this),
         "lore" to itemLore,
         "itemsInside" to itemsInside

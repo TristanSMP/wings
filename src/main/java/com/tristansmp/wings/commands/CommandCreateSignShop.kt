@@ -20,6 +20,11 @@ class CommandCreateSignShop : CommandExecutor {
             return true
         }
 
+        if (!Wings.instance.commandRatelimiter.canRunCommand(sender)) {
+            sender.sendError("You are sending commands too fast! Please wait a few seconds before trying again.")
+            return true
+        }
+
         val player = sender
 
         if (!sender.hasPermission("wings.create-sign-shop")) {
