@@ -17,6 +17,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BlockStateMeta
 import org.bukkit.inventory.meta.BookMeta
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import java.util.*
 
 
@@ -82,7 +83,7 @@ fun ItemStack.toJson(): Map<String, Any?> {
     val enchantments = enchantments.map { it.key.name to it.value }.toMap().toMutableMap()
 
     if (type == Material.ENCHANTED_BOOK) {
-        val book = itemMeta as BookMeta
+        val book = itemMeta as EnchantmentStorageMeta
 
         book.enchants.forEach { enchantments[it.key.name] = it.value }
     }
