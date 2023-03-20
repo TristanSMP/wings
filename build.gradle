@@ -39,11 +39,10 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    compileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation 'com.akuleshov7:ktoml-core:0.3.0'
     implementation 'com.akuleshov7:ktoml-file:0.3.0'
-    implementation 'com.github.jkcclemens:khttp:0.1.0'
     compileOnly 'net.luckperms:api:5.4'
 }
 
