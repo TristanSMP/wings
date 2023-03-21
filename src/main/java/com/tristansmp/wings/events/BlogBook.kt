@@ -7,6 +7,7 @@ import com.tristansmp.wings.lib.sendInfo
 import com.tristansmp.wings.lib.sendSuccess
 import com.tristansmp.wings.lib.toJsonObject
 import com.tristansmp.wings.routes.toJson
+import io.ktor.client.call.body
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.papermc.paper.event.player.AsyncChatEvent

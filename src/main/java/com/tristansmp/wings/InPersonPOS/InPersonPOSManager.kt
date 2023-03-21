@@ -6,6 +6,10 @@ import com.tristansmp.wings.lib.HandleGatewayError
 import com.tristansmp.wings.lib.sendError
 import com.tristansmp.wings.lib.strSerialize
 import io.ktor.client.call.*
+import io.ktor.client.call.body
+import io.ktor.client.call.body
+import io.ktor.client.call.body
+import io.ktor.client.call.body
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking

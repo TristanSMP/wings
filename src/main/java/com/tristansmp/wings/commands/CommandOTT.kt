@@ -6,6 +6,7 @@ import com.tristansmp.wings.lib.sendError
 import com.tristansmp.wings.lib.sendInfo
 import com.tristansmp.wings.lib.sendSuccess
 import io.ktor.client.call.*
+import io.ktor.client.call.body
 import io.ktor.client.request.*
 import io.ktor.http.*
 import jdk.incubator.foreign.ResourceScope.Handle

@@ -4,6 +4,7 @@ import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.sendError
 import com.tristansmp.wings.lib.sendInfo
 import com.tristansmp.wings.lib.sendSuccess
+import io.ktor.client.call.body
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking

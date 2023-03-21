@@ -3,6 +3,7 @@ package com.tristansmp.wings.commands
 import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.*
 import com.tristansmp.wings.routes.toJson
+import io.ktor.client.call.body
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
