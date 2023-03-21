@@ -9,6 +9,7 @@ import com.tristansmp.wings.events.RecipeHandler
 import com.tristansmp.wings.lib.CommandRatelimiter
 import com.tristansmp.wings.lib.ConfigManager
 import com.tristansmp.wings.lib.MemoryStore
+import com.tristansmp.wings.messaging.WingsAPI
 import com.tristansmp.wings.plugins.configureHTTP
 import com.tristansmp.wings.plugins.configureRouting
 import com.tristansmp.wings.plugins.configureSerialization
@@ -35,9 +36,11 @@ class Wings : JavaPlugin() {
 
     companion object {
         lateinit var instance: Wings
+        val WINGS_API_CHANNEL = "wings:api"
     }
 
     val registeredRecipes = mutableListOf<NamespacedKey>()
+
 
     lateinit var config: ConfigManager
     lateinit var mstore: MemoryStore
@@ -123,10 +126,17 @@ class Wings : JavaPlugin() {
 
         server.addRecipe(recipe)
         registeredRecipes.add(key)
+
+        // Plugin messages
+        this.server.messenger.registerOutgoingPluginChannel(this, WINGS_API_CHANNEL);
+        this.server.messenger.registerIncomingPluginChannel(this, WINGS_API_CHANNEL, WingsAPI());
     }
+
 
     override fun onDisable() {
         // Plugin shutdown logic
+        this.server.messenger.unregisterOutgoingPluginChannel(this);
+        this.server.messenger.unregisterIncomingPluginChannel(this);
     }
 }
 
