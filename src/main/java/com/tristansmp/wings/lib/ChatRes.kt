@@ -1,7 +1,6 @@
 package com.tristansmp.wings.lib
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.entity.Player
 
@@ -29,4 +28,16 @@ fun Player.sendError(message: String) {
 
 fun Player.sendInfo(message: String) {
     this.sendMessage(ChatRes.info(message))
+}
+
+fun Player.sendSuccessIndicator(message: String) {
+    this.sendActionBar(ChatRes.success(message))
+}
+
+fun Player.sendErrorIndicator(message: String) {
+    this.sendActionBar(ChatRes.error(message))
+}
+
+fun Player.sendInfoIndicator(message: String) {
+    this.sendActionBar(ChatRes.info(message))
 }

@@ -2,10 +2,11 @@ package com.tristansmp.wings
 
 import com.tristansmp.wings.InPersonPOS.InPersonPOSManager
 import com.tristansmp.wings.commands.*
-import com.tristansmp.wings.events.BlogBook
 import com.tristansmp.wings.events.ChatListener
 import com.tristansmp.wings.events.InPersonPOS
 import com.tristansmp.wings.events.RecipeHandler
+import com.tristansmp.wings.item.BlogBook
+import com.tristansmp.wings.item.WingsItemManager
 import com.tristansmp.wings.lib.CommandRatelimiter
 import com.tristansmp.wings.lib.ConfigManager
 import com.tristansmp.wings.lib.MemoryStore
@@ -39,14 +40,11 @@ class Wings : JavaPlugin() {
         val WINGS_API_CHANNEL = "wings:api"
     }
 
-    val registeredRecipes = mutableListOf<NamespacedKey>()
-
-
     lateinit var config: ConfigManager
     lateinit var mstore: MemoryStore
     lateinit var inPersonPOSManager: InPersonPOSManager
-    lateinit var namespace: Namespace
     lateinit var commandRatelimiter: CommandRatelimiter
+    lateinit var itemManager: WingsItemManager
 
     var lp: LuckPerms? = null
     val http = HttpClient(Java) {
@@ -69,8 +67,8 @@ class Wings : JavaPlugin() {
         config = ConfigManager()
         mstore = MemoryStore()
         inPersonPOSManager = InPersonPOSManager()
-        namespace = Namespace(this)
         commandRatelimiter = CommandRatelimiter(this)
+        itemManager = WingsItemManager()
 
         // Luckperms Hook
         val provider = Bukkit.getServicesManager().getRegistration(
@@ -84,7 +82,6 @@ class Wings : JavaPlugin() {
         // Register event listeners
         server.pluginManager.registerEvents(ChatListener(), this)
         server.pluginManager.registerEvents(InPersonPOS(), this)
-        server.pluginManager.registerEvents(BlogBook(), this)
         server.pluginManager.registerEvents(RecipeHandler(), this)
 
         // Link commands
@@ -94,38 +91,7 @@ class Wings : JavaPlugin() {
         this.getCommand("package")?.setExecutor(CommandPackage())
         this.getCommand("create-sign-shop")?.setExecutor(CommandCreateSignShop())
         this.getCommand("ott")?.setExecutor(CommandOTT())
-
-        // Blog book recipe register
-        val item = ItemStack(Material.WRITABLE_BOOK)
-
-        val meta = item.itemMeta
-
-        val lore: MutableList<Component> = if (meta.hasLore()) meta.lore()!! else mutableListOf()
-
-        lore.add(
-            LegacyComponentSerializer.legacyAmpersand()
-                .deserialize("&f&r&bWireless Antenna &7(connected to tsmp blog)")
-        )
-
-        meta.lore(lore)
-
-        meta.persistentDataContainer.set(
-            namespace.BlogBookTag,
-            PersistentDataType.STRING,
-            "true"
-        )
-
-        item.itemMeta = meta
-
-        val key = NamespacedKey(this, "blog_book")
-        val recipe = ShapedRecipe(key, item)
-
-        recipe.shape("DB")
-        recipe.setIngredient('D', Material.DIAMOND)
-        recipe.setIngredient('B', Material.WRITABLE_BOOK)
-
-        server.addRecipe(recipe)
-        registeredRecipes.add(key)
+        this.getCommand("wi")?.setExecutor(CommandWingsItem())
 
         // Plugin messages
         this.server.messenger.registerOutgoingPluginChannel(this, WINGS_API_CHANNEL);

@@ -1,33 +1,53 @@
-package com.tristansmp.wings.events
+package com.tristansmp.wings.item
 
 import com.tristansmp.wings.Wings
-import com.tristansmp.wings.commands.PackagePayload
 import com.tristansmp.wings.lib.HandleGatewayError
 import com.tristansmp.wings.lib.sendInfo
 import com.tristansmp.wings.lib.sendSuccess
-import com.tristansmp.wings.lib.toJsonObject
-import com.tristansmp.wings.routes.toJson
-import io.ktor.client.call.body
 import io.ktor.client.request.*
 import io.ktor.http.*
-import io.papermc.paper.event.player.AsyncChatEvent
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
-import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerEditBookEvent
+import org.bukkit.inventory.ItemStack
 
 @Serializable
 data class BlogBookPayload(val uuid: String, val pages: List<String>, val title: String)
 
-class BlogBook : Listener {
+class BlogBook : WingsItem {
+
+    constructor() : super("blog_book") {
+        val item = ItemStack(Material.WRITABLE_BOOK)
+
+        this.name = "Blog Book"
+
+        val lore: MutableList<Component> = if (item.itemMeta.hasLore()) item.itemMeta.lore()!! else mutableListOf()
+
+        lore.add(
+            LegacyComponentSerializer.legacyAmpersand()
+                .deserialize("&f&r&bWireless Antenna &7(connected to tsmp blog)")
+        )
+
+        item.itemMeta.lore(lore)
+
+        this.setBaseItem(item)
+        this.setRecipe { recipe ->
+            recipe.shape("DB")
+            recipe.setIngredient('D', Material.DIAMOND)
+            recipe.setIngredient('B', Material.WRITABLE_BOOK)
+        }
+    }
+
     @EventHandler()
     fun onBookSign(event: PlayerEditBookEvent) {
+        if (!event.newBookMeta.persistentDataContainer.has(this.id)) return;
+
         if (!event.isSigning) return;
-        if (!event.newBookMeta.persistentDataContainer.has(Wings.instance.namespace.BlogBookTag)) return;
         val player = event.player
         val uuid = player.uniqueId.toString()
         val token = Wings.instance.config.config.token ?: return
@@ -62,3 +82,4 @@ class BlogBook : Listener {
         })
     }
 }
+

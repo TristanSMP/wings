@@ -9,9 +9,11 @@ class RecipeHandler : Listener {
     @EventHandler()
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
-
-        Wings.instance.registeredRecipes.forEach { recipe ->
-            player.discoverRecipe(recipe)
+        
+        Wings.instance.itemManager.getWingsItems().forEach { wingsItem ->
+            if (wingsItem.recipe != null) {
+                player.discoverRecipe(wingsItem.recipe!!.key)
+            }
         }
     }
 }
