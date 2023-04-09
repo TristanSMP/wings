@@ -5,7 +5,7 @@ import com.tristansmp.wings.commands.*
 import com.tristansmp.wings.events.ChatListener
 import com.tristansmp.wings.events.InPersonPOS
 import com.tristansmp.wings.events.RecipeHandler
-import com.tristansmp.wings.item.BlogBook
+import com.tristansmp.wings.events.ResourcesListener
 import com.tristansmp.wings.item.WingsItemManager
 import com.tristansmp.wings.lib.CommandRatelimiter
 import com.tristansmp.wings.lib.ConfigManager
@@ -21,15 +21,8 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.luckperms.api.LuckPerms
 import org.bukkit.Bukkit
-import org.bukkit.Material
-import org.bukkit.NamespacedKey
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.ShapedRecipe
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 
 
@@ -52,11 +45,12 @@ class Wings : JavaPlugin() {
             json()
         }
     }
+    private var engine: NettyApplicationEngine? = null
 
     override fun onEnable() {
         // API
         Thread {
-            embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
+            engine = embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
                 .start(wait = true)
         }.start()
 
@@ -83,6 +77,7 @@ class Wings : JavaPlugin() {
         server.pluginManager.registerEvents(ChatListener(), this)
         server.pluginManager.registerEvents(InPersonPOS(), this)
         server.pluginManager.registerEvents(RecipeHandler(), this)
+        server.pluginManager.registerEvents(ResourcesListener(), this)
 
         // Link commands
         this.getCommand("link")?.setExecutor(CommandLink())
@@ -100,7 +95,9 @@ class Wings : JavaPlugin() {
 
 
     override fun onDisable() {
-        // Plugin shutdown logic
+        engine?.stop(0, 0)
+        http.close()
+
         this.server.messenger.unregisterOutgoingPluginChannel(this);
         this.server.messenger.unregisterIncomingPluginChannel(this);
     }

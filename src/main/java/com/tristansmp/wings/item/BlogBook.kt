@@ -21,7 +21,7 @@ data class BlogBookPayload(val uuid: String, val pages: List<String>, val title:
 
 class BlogBook : WingsItem {
 
-    constructor() : super("blog_book") {
+    constructor() : super("blog_book", 9000) {
         val item = ItemStack(Material.WRITABLE_BOOK)
 
         this.name = "Blog Book"

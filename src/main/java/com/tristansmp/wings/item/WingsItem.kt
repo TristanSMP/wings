@@ -10,14 +10,16 @@ import org.bukkit.persistence.PersistentDataType
 
 open class WingsItem : Listener {
     val id: NamespacedKey
+    val cmId: Int
 
     var recipe: ShapedRecipe? = null
     var name = "A Wings Item"
 
     private var baseItem: ItemStack? = null
 
-    constructor(id: String) {
+    constructor(id: String, cmId: Int) {
         this.id = NamespacedKey(Wings.instance, id)
+        this.cmId = cmId
     }
 
     protected fun setRecipe(cb: (ShapedRecipe) -> Unit) {
@@ -33,8 +35,9 @@ open class WingsItem : Listener {
 
     fun createItemStack(): ItemStack {
         val item = this.baseItem ?: throw Error("Base item not set for ${this.id}")
-
         val meta = item.itemMeta
+
+        meta.setCustomModelData(cmId)
 
         meta.setDisplayName("${ChatColor.RESET}${this.name}")
 
@@ -48,6 +51,7 @@ open class WingsItem : Listener {
 
         return item
     }
+
 
     fun registerItem() {
         Wings.instance.server.addRecipe(this.recipe)
