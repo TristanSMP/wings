@@ -60,6 +60,7 @@ class CoffeeShopDisc : WingsItem {
         val scheduler = Wings.instance.server.scheduler
 
         scheduler.runTaskLater(Wings.instance, Runnable {
+            if (!JUKEBOXES_PLAYING_COFFEE_SHOP.contains(jukebox)) return@Runnable
             JUKEBOXES_PLAYING_COFFEE_SHOP.remove(jukebox)
             block.world.dropItemNaturally(block.location.add(0.5, 0.5, 0.5), this.createItemStack())
         }, 113 * 20)
