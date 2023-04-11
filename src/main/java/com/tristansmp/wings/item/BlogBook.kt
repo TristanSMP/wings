@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerEditBookEvent
@@ -28,12 +28,13 @@ class BlogBook : WingsItem {
 
         val lore: MutableList<Component> = if (item.itemMeta.hasLore()) item.itemMeta.lore()!! else mutableListOf()
 
-        lore.add(
-            LegacyComponentSerializer.legacyAmpersand()
-                .deserialize("&f&r&bWireless Antenna &7(connected to tsmp blog)")
-        )
+        lore.add(Component.text("${ChatColor.RESET}${ChatColor.AQUA}Wireless Antenna ${ChatColor.RESET}${ChatColor.GRAY}(connected to tsmp blog)"))
 
-        item.itemMeta.lore(lore)
+        val meta = item.itemMeta
+
+        meta.lore(lore)
+
+        item.itemMeta = meta
 
         this.setBaseItem(item)
         this.setRecipe { recipe ->
