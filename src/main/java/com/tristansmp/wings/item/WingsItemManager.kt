@@ -8,6 +8,7 @@ class WingsItemManager {
 
     constructor() {
         registerWingsItem(BlogBook())
+        registerWingsItem(CoffeeShopDisc())
     }
 
     private fun registerWingsItem(wingsItem: WingsItem) {
