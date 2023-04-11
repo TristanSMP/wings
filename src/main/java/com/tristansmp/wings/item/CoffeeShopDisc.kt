@@ -12,7 +12,7 @@ class CoffeeShopDisc : WingsItem {
 
     private val JUKEBOXES_PLAYING_COFFEE_SHOP = mutableSetOf<org.bukkit.block.Jukebox>()
 
-    constructor() : super("music_disc_coffee_shop", 9001) {
+    constructor() : super("music_disc_coffee_shop", 7733267) {
         val item = ItemStack(Material.WARPED_FUNGUS_ON_A_STICK)
 
         this.name = "${ChatColor.AQUA}Music Disc"
