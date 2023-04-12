@@ -59,7 +59,7 @@ class ResourcesListener : Listener {
             }, 20 * 3)
 
             scheduler.runTaskLater(Wings.instance, Runnable {
-                event.player.sendInfoIndicator("It's day ${event.player.world.time / 24000} and it's ${event.player.world.get12HourTime()}")
+                event.player.sendInfoIndicator("It's day ${event.player.world.fullTime / 24000} and it's ${event.player.world.get12HourTime()}")
             }, 20 * 7)
         }
 
