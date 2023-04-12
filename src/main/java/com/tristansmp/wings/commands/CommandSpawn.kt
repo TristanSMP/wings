@@ -42,6 +42,8 @@ data class GETSpawnLocations(
 
 
 class CommandSpawn : CommandExecutor {
+    private val CachedSpawns = mutableListOf<SpawnLocation>()
+
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) {
             sender.sendMessage("You must be a player to use this command!")
@@ -71,54 +73,66 @@ class CommandSpawn : CommandExecutor {
                     contentType(ContentType.Application.Json)
                 }
 
+                if (CachedSpawns.isNotEmpty()) {
+                    renderSpawnSelector(sender, CachedSpawns)
+                }
+
                 if (response.status.isSuccess()) {
                     try {
                         val data = response.body<GETSpawnLocations>()
 
-                        scheduler.runTask(Wings.instance, Runnable {
-                            val size = 27
-                            val gui =
-                                InventoryGUI(Bukkit.createInventory(null, size, Component.text("Spawn Selection")))
+                        CachedSpawns.clear()
+                        CachedSpawns.addAll(data.spawns)
 
-                            data.spawns.forEachIndexed { index, spawn ->
-                                val button = ItemButton.create(
-                                    ItemBuilder(SerializeUtils.itemStackFromBase64(spawn.b64ItemIcon))
-                                        .setName("${ChatColor.RESET}${spawn.name}")
-                                ) { e: InventoryClickEvent ->
-                                    sender.closeInventory()
-
-                                    val ess = Wings.instance.server.pluginManager.getPlugin("Essentials") as IEssentials
-
-                                    val loc = LocationStrDeserialize(spawn.seriLoc)
-                                    val asyncTeleporter = ess.getUser(sender).asyncTeleport as IAsyncTeleport
-                                    val future: CompletableFuture<Boolean> = CompletableFuture()
-
-                                    future.thenAccept { success: Boolean ->
-                                        if (success) {
-                                            sender.sendSuccess("Warp successful!")
-                                        }
-                                    }
-
-                                    asyncTeleporter.teleport(loc, Trade("spawn", ess), TeleportCause.COMMAND, future)
-                                }
-
-                                gui.addButton(button, index + 9)
-                            }
-
-                            gui.open(sender)
-                            gui.destroysOnClose()
-                        })
-
+                        renderSpawnSelector(sender, data.spawns)
                     } catch (e: Exception) {
                         sender.sendError("Malformed response from server! Please try again later.")
                         e.printStackTrace()
                     }
                 } else {
-                    sender.sendError("Failed to discover spawn locations. Please inform staff.")
+                    sender.sendError("Failed to discover new spawn locations. Please inform staff.")
                 }
             }
         })
 
         return true
+    }
+
+    private fun renderSpawnSelector(sender: Player, spawns: List<SpawnLocation>) {
+        val scheduler = Wings.instance.server.scheduler
+
+        scheduler.runTask(Wings.instance, Runnable {
+            val size = 27
+            val gui =
+                InventoryGUI(Bukkit.createInventory(null, size, Component.text("Spawn Selection")))
+
+            spawns.forEachIndexed { index, spawn ->
+                val button = ItemButton.create(
+                    ItemBuilder(SerializeUtils.itemStackFromBase64(spawn.b64ItemIcon))
+                        .setName("${ChatColor.RESET}${spawn.name}")
+                ) { e: InventoryClickEvent ->
+                    sender.closeInventory()
+
+                    val ess = Wings.instance.server.pluginManager.getPlugin("Essentials") as IEssentials
+
+                    val loc = LocationStrDeserialize(spawn.seriLoc)
+                    val asyncTeleporter = ess.getUser(sender).asyncTeleport as IAsyncTeleport
+                    val future: CompletableFuture<Boolean> = CompletableFuture()
+
+                    future.thenAccept { success: Boolean ->
+                        if (success) {
+                            sender.sendSuccess("Warp successful!")
+                        }
+                    }
+
+                    asyncTeleporter.teleport(loc, Trade("spawn", ess), TeleportCause.COMMAND, future)
+                }
+
+                gui.addButton(button, index + 9)
+            }
+
+            gui.open(sender)
+            gui.destroysOnClose()
+        })
     }
 }
