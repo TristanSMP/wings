@@ -32,3 +32,7 @@ commands:
     description: Get a Wings Item
     usage: /wi <item>
     permission: wings.wi
+  spawn:
+    description: Go to TSMP's current spawn, or previous spawns.
+    usuage: /spawn
+    permission: wings.spawn

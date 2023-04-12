@@ -40,6 +40,7 @@ class Wings : JavaPlugin() {
     lateinit var itemManager: WingsItemManager
 
     var lp: LuckPerms? = null
+
     val http = HttpClient(Java) {
         install(ContentNegotiation) {
             json()
@@ -87,6 +88,7 @@ class Wings : JavaPlugin() {
         this.getCommand("create-sign-shop")?.setExecutor(CommandCreateSignShop())
         this.getCommand("ott")?.setExecutor(CommandOTT())
         this.getCommand("wi")?.setExecutor(CommandWingsItem())
+        this.getCommand("spawn")?.setExecutor(CommandSpawn())
 
         // Plugin messages
         this.server.messenger.registerOutgoingPluginChannel(this, WINGS_API_CHANNEL);

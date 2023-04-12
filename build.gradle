@@ -24,6 +24,8 @@ repositories {
         name = 'jitpack'
         url = 'https://jitpack.io'
     }
+    maven { url = 'https://redempt.dev' }
+    maven { url = 'https://repo.essentialsx.net/releases/' }
 }
 
 dependencies {
@@ -44,6 +46,8 @@ dependencies {
     implementation 'com.akuleshov7:ktoml-core:0.3.0'
     implementation 'com.akuleshov7:ktoml-file:0.3.0'
     compileOnly 'net.luckperms:api:5.4'
+    implementation 'com.github.Redempt:RedLib:6.5.8'
+    compileOnly 'net.essentialsx:EssentialsX:2.19.7'
 }
 
 def targetJavaVersion = 17
