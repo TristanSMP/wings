@@ -36,3 +36,7 @@ commands:
     description: Go to TSMP's current spawn, or previous spawns.
     usuage: /spawn
     permission: wings.spawn
+  itemb64:
+    description: Get the base64 for an item
+    usage: /itemb64
+    permission: wings.itemb64
