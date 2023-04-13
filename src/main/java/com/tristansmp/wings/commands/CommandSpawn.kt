@@ -84,7 +84,9 @@ class CommandSpawn : CommandExecutor {
                         CachedSpawns.clear()
                         CachedSpawns.addAll(data.spawns)
 
-                        renderSpawnSelector(sender, data.spawns)
+                        if (CachedSpawns.isEmpty()) {
+                            renderSpawnSelector(sender, data.spawns)
+                        }
                     } catch (e: Exception) {
                         sender.sendError("Malformed response from server! Please try again later.")
                         e.printStackTrace()
