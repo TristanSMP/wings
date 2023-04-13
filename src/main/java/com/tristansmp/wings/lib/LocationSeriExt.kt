@@ -9,8 +9,9 @@ fun Location.strSerialize(): String {
 
 fun LocationStrDeserialize(str: String): Location {
     val split = str.split(",")
+    val world = Wings.instance.server.getWorld(split[3]) ?: throw Exception("World '${split[3]}' does not exist.")
     return Location(
-        Wings.instance.server.getWorld(split[3]),
+        world,
         split[0].toDouble(),
         split[1].toDouble(),
         split[2].toDouble()

@@ -41,3 +41,7 @@ fun Player.sendErrorIndicator(message: String) {
 fun Player.sendInfoIndicator(message: String) {
     this.sendActionBar(ChatRes.info(message))
 }
+
+fun Player.sendActionBarS(message: String) {
+    this.sendActionBar(Component.text(message))
+}
