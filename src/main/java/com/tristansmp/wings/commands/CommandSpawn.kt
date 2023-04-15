@@ -63,18 +63,17 @@ class CommandSpawn : CommandExecutor {
         val token = Wings.instance.config.config.token ?: return false
         val endpoint = Wings.instance.config.config.wingsApiEndpoint ?: return false
 
-        val scheduler = Wings.instance.server.scheduler
+        if (CachedSpawns.isNotEmpty()) {
+            renderSpawnSelector(sender, CachedSpawns)
+        }
 
+        val scheduler = Wings.instance.server.scheduler
 
         scheduler.runTaskAsynchronously(Wings.instance, Runnable {
             runBlocking {
                 val response = Wings.instance.http.post("$endpoint/getSpawnLocations") {
                     header("Authorization", token)
                     contentType(ContentType.Application.Json)
-                }
-
-                if (CachedSpawns.isNotEmpty()) {
-                    renderSpawnSelector(sender, CachedSpawns)
                 }
 
                 if (response.status.isSuccess()) {
