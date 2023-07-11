@@ -90,6 +90,7 @@ class Wings : JavaPlugin() {
         this.getCommand("wi")?.setExecutor(CommandWingsItem())
         this.getCommand("spawn")?.setExecutor(CommandSpawn())
         this.getCommand("itemb64")?.setExecutor(CommandItemB64())
+        this.getCommand("talk")?.setExecutor(CommandTalk())
 
         // Plugin messages
         this.server.messenger.registerOutgoingPluginChannel(this, WINGS_API_CHANNEL);

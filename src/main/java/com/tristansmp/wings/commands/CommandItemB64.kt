@@ -1,6 +1,5 @@
 package com.tristansmp.wings.commands
 
-import com.tristansmp.wings.Wings
 import com.tristansmp.wings.lib.SerializeUtils
 import com.tristansmp.wings.lib.sendError
 import net.kyori.adventure.text.Component
@@ -15,11 +14,6 @@ class CommandItemB64 : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) {
             sender.sendMessage("You must be a player to use this command!")
-            return true
-        }
-
-        if (!Wings.instance.commandRatelimiter.canRunCommand(sender)) {
-            sender.sendError("You are sending commands too fast! Please wait a few seconds before trying again.")
             return true
         }
 

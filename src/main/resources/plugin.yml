@@ -40,3 +40,7 @@ commands:
     description: Get the base64 for an item
     usage: /itemb64
     permission: wings.itemb64
+  talk:
+    description: Send a message to a target as an NPC
+    usage: /talk <target> <name> <sound> <message>
+    permission: wings.talk

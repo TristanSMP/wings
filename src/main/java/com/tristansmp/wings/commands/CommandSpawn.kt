@@ -40,9 +40,9 @@ data class GETSpawnLocations(
     val spawns: List<SpawnLocation>
 )
 
+private val CachedSpawns = mutableListOf<SpawnLocation>()
 
 class CommandSpawn : CommandExecutor {
-    private val CachedSpawns = mutableListOf<SpawnLocation>()
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) {
